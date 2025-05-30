@@ -1,16 +1,23 @@
-FROM ubuntu:latest AS build
+# Etapa de build
+FROM maven:3.9.6-eclipse-temurin-17 AS build
 
-RUN apt-get update
-RUN apt-get install openjdk-17-jdk -y
+WORKDIR /app
+
+# Copia tudo, incluindo a pasta libs com sajdbc4.jar
 COPY . .
 
-RUN apt-get install maven -y
-RUN mvn clean install
+# Faz o build do projeto
+RUN mvn clean package -DskipTests
 
-FROM openjdk:17-jdk-slim
+# Etapa de runtime
+FROM eclipse-temurin:17-jdk-jammy
+
+WORKDIR /app
 
 EXPOSE 8080
 
-COPY --from=build /target/api-0.0.1-SNAPSHOT.jar app.jar
+# Copia o jar gerado na etapa de build
+COPY --from=build /app/target/api-0.0.1-SNAPSHOT.jar app.jar
 
-ENTRYPOINT [ "java", "-jar", "app.jar" ]
+# Executa o jar
+ENTRYPOINT ["java", "-jar", "app.jar"]
