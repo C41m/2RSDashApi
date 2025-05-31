@@ -58,8 +58,6 @@
 			<groupId>com.sap.sqlanywhere</groupId>
 			<artifactId>sajdbc4</artifactId>
 			<version>17</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/libs/sajdbc4.jar</systemPath>
 		</dependency>
 
 		<dependency>
